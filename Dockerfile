@@ -1,5 +1,5 @@
-# Use official PHP + Composer image
-FROM php:8.2-fpm
+# Upgrade to PHP 8.4
+FROM php:8.4-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \

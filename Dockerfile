@@ -31,26 +31,22 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # -------------------------------
-# Clear Laravel caches & generate key
-# -------------------------------
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear \
-    && php artisan key:generate
-
-# -------------------------------
-# Set permissions (optional)
+# Set permissions (storage & cache)
 # -------------------------------
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # -------------------------------
-# Expose port for Render
+# Expose port
 # -------------------------------
 EXPOSE 8000
 
 # -------------------------------
-# Run Laravel server in production
+# Run Laravel server & clear caches at startup
 # -------------------------------
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear \
+    && php artisan key:generate \
+    && php artisan serve --host=0.0.0.0 --port=8000
